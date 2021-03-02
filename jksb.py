@@ -3,6 +3,7 @@
 # @Author  : leeyiding
 # @Email   : admin@lyd.im
 
+import os
 import requests
 import re
 import logging
@@ -177,7 +178,8 @@ class ZZUjksb(object):
 
 def readJson():
     #读取用户配置信息
-    with open('./config.json',encoding='UTF-8') as fp:
+    dirPath = os.path.dirname(os.path.abspath(__file__))
+    with open(dirPath + '/config.json',encoding='UTF-8') as fp:
         users = json.load(fp)
         return users
 
