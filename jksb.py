@@ -4,11 +4,15 @@
 # @Email   : admin@lyd.im
 
 import os
+import time
 import requests
 import re
 import logging
 import json
 from bs4 import BeautifulSoup
+
+global dirPath
+dirPath = os.path.dirname(os.path.abspath(__file__))
 
 class ZZUjksb(object):
     # 初始化
@@ -160,7 +164,8 @@ class ZZUjksb(object):
         logging.basicConfig(level = logging.INFO,format = '%(asctime)s - %(levelname)s - %(message)s')
         self.logger = logging.getLogger(__name__)
         # 日志输入文件
-        fh = logging.FileHandler('./log.txt', mode='a', encoding='utf-8')
+        date = time.strftime("%Y-%m-%d", time.localtime()) 
+        fh = logging.FileHandler('{}/logs/{}.log'.format(dirPath,date), mode='a', encoding='utf-8')
         fh.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))
         self.logger.addHandler(fh)
 
@@ -178,7 +183,6 @@ class ZZUjksb(object):
 
 def readJson():
     #读取用户配置信息
-    dirPath = os.path.dirname(os.path.abspath(__file__))
     with open(dirPath + '/config.json',encoding='UTF-8') as fp:
         users = json.load(fp)
         return users
