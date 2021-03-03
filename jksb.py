@@ -5,6 +5,7 @@
 
 import os
 import time
+import sys
 import requests
 import re
 import logging
@@ -12,15 +13,20 @@ import json
 from bs4 import BeautifulSoup
 
 # 定义环境变量
-global dirPath
-dirPath = os.path.dirname(os.path.abspath(__file__))
+rootDir = os.path.dirname(os.path.abspath(__file__))
+configPath = rootDir + "/config.json"
+logDir = rootDir + "/logs"
+
 # 日志输出控制台
 global logger
 logging.basicConfig(level = logging.INFO,format = '%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 # 日志输入文件
 date = time.strftime("%Y-%m-%d", time.localtime()) 
-fh = logging.FileHandler('{}/logs/{}.log'.format(dirPath,date), mode='a', encoding='utf-8')
+if not os.path.exists(logDir):
+    logger.warning("未检测到日志目录存在，开始创建logs目录")
+    os.mkdir(logDir)
+fh = logging.FileHandler('{}/{}.log'.format(logDir,date), mode='a', encoding='utf-8')
 fh.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))
 logger.addHandler(fh)
 
@@ -182,14 +188,18 @@ class ZZUjksb(object):
             else:
                 self.logger.error("已连续尝试模拟登陆三次失败，请检查网络后重试！")
 
-def readJson():
-    #读取用户配置信息
-    with open(dirPath + '/config.json',encoding='UTF-8') as fp:
-        users = json.load(fp)
-        return users
+def readJson(configPath):
+    if os.path.exists(configPath):
+        #读取用户配置信息
+        with open(configPath,encoding='UTF-8') as fp:
+            users = json.load(fp)
+            return users
+    else:
+        logger.error("未检测到配置文件config.json存在，请按照README.md说明创建配置文件")
+        sys.exit(0)
 
 if __name__ == '__main__':
-    users = readJson()
+    users = readJson(configPath)
     for count in range(len(users)):
         user = ZZUjksb(users[count])
         user.main()
