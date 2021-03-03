@@ -1,3 +1,6 @@
 requests
 logging
 beautifulsoup4
+cryptography
+pyOpenSSL
+certifi
