@@ -26,21 +26,9 @@ class ZZUjksb(object):
     def login(self):
         loginUrl = self.baseUrl + "/login"
         headers = {
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
-            "Accept-Encoding": 'gzip, deflate, br',
-            "Accept-Language": "zh",
-            "Cache-Control": "max-age=0",
-            "Connection": "keep-alive",
-            "Content-Length": "139",
-            "Content-Type": "application/x-www-form-urlencoded",
             "Host": "jksb.v.zzu.edu.cn",
             "Origin": "https://jksb.v.zzu.edu.cn",
             "Referer": "https://jksb.v.zzu.edu.cn/vls6sss/zzujksb.dll/first0",
-            "Sec-Fetch-Dest": "iframe",
-            "Sec-Fetch-Mode": "navigate",
-            "Sec-Fetch-Site": "same-origin",
-            "Sec-Fetch-User": "?1",
-            "Upgrade-Insecure-Requests": "1",
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36"
         }
         data = {
@@ -79,8 +67,11 @@ class ZZUjksb(object):
             "ptopid": self.ptopid,
             "sid": self.sid
         }
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36"
+        }
         try:
-            r = requests.get(url=checkUrl,params=paramas)
+            r = requests.get(url=checkUrl,params=paramas,headers=headers)
         except:
             self.logger.error("\t检查打卡状态失败")
         else:
@@ -131,21 +122,8 @@ class ZZUjksb(object):
     def checkin(self):
         checkinUrl = self.baseUrl + "/jksb"
         headers = {
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
-            "Accept-Encoding": 'gzip, deflate, br',
-            "Accept-Language": "zh",
-            "Cache-Control": "max-age=0",
-            "Connection": "keep-alive",
-            "Content-Length": "482",
-            "Content-Type": "application/x-www-form-urlencoded",
-            "Host": "jksb.v.zzu.edu.cn",
             "Origin": "https://jksb.v.zzu.edu.cn",
             "Referer": "https://jksb.v.zzu.edu.cn/vls6sss/zzujksb.dll/jksb",
-            "Sec-Fetch-Dest": "iframe",
-            "Sec-Fetch-Mode": "navigate",
-            "Sec-Fetch-Site": "same-origin",
-            "Sec-Fetch-User": "?1",
-            "Upgrade-Insecure-Requests": "1",
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36"
         }
         session = requests.session()
