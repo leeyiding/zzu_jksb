@@ -12,22 +12,22 @@
 3. 安装依赖
 
    ```
+   pip3 install pip3 -U
+   pip3 config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
    pip3 install -r requestments.txt
    ```
 
 4. 复制模板`config.json.sample`并修改参数
 
    ```
-   # Windows
-   copy ./config.json.sample ./config.json
    # Linux
    cp ./config.json.sample ./config.json
    ```
-
+   
    参数详情
 
    | 参数     | 含义                                                         | 备注 |
-   | -------- | ------------------------------------------------------------ | ---- |
+| -------- | ------------------------------------------------------------ | ---- |
    | username | 学号                                                         | 必填 |
    | password | 健康上报平台密码                                             | 必填 |
    | myvs_1   | 您今天是否有发热症状?（是\|否）                              | 默认 |
@@ -52,8 +52,8 @@
    | weidu    | 纬度                                                         | 默认 |
    | sckey    | server酱key                                                  | 选填 |
    | ddtoken  | 钉钉机器人token                                              | 选填 |
-
-5. 测试代码
+   
+5. 运行代码测试
 
    ```
    python3 jksb.py
@@ -66,16 +66,6 @@
    ```
 
 ## 已知问题
-
-1. Linux客户端频繁出现SSL错误
-
-   解决方法：
-
-   ```
-   pip3 install cryptography
-   pip3 install pyOpenSSL
-   pip3 install certifi
-   ```
 
 2. 频繁运行脚本会导致登陆页出现验证码
 
@@ -100,6 +90,10 @@
 1. 2021.3.1
 
    首次提交代码，具有重复打卡检测，消息通知等功能
+   
+2. 2021.3.3
+
+   优化代码逻辑，修复文件路径问题。
 
 ## TODO
 
