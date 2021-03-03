@@ -1,7 +1,7 @@
 # zzu_jksb
 ## 使用方法
 
-1. 安装python3
+1. 安装python3和git
 
 2. 克隆仓库
 
@@ -12,7 +12,7 @@
 3. 安装依赖
 
    ```
-   pip3 install pip3 -U
+   pip3 install pip -U
    pip3 config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
    pip3 install -r requestments.txt
    ```
