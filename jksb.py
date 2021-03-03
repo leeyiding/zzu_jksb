@@ -11,8 +11,18 @@ import logging
 import json
 from bs4 import BeautifulSoup
 
+# 定义环境变量
 global dirPath
 dirPath = os.path.dirname(os.path.abspath(__file__))
+# 日志输出控制台
+global logger
+logging.basicConfig(level = logging.INFO,format = '%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+# 日志输入文件
+date = time.strftime("%Y-%m-%d", time.localtime()) 
+fh = logging.FileHandler('{}/logs/{}.log'.format(dirPath,date), mode='a', encoding='utf-8')
+fh.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))
+logger.addHandler(fh)
 
 class ZZUjksb(object):
     # 初始化
@@ -23,7 +33,7 @@ class ZZUjksb(object):
         self.data2 = user['data2']
         self.notify = user['notify']
         self.baseUrl = "https://jksb.v.zzu.edu.cn/vls6sss/zzujksb.dll"
-
+        self.logger = logger
     # 登陆
     def login(self):
         loginUrl = self.baseUrl + "/login"
@@ -160,15 +170,6 @@ class ZZUjksb(object):
         self.sendMsg(self.notify,msg.text)
         
     def main(self):
-        # 日志输出控制台
-        logging.basicConfig(level = logging.INFO,format = '%(asctime)s - %(levelname)s - %(message)s')
-        self.logger = logging.getLogger(__name__)
-        # 日志输入文件
-        date = time.strftime("%Y-%m-%d", time.localtime()) 
-        fh = logging.FileHandler('{}/logs/{}.log'.format(dirPath,date), mode='a', encoding='utf-8')
-        fh.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))
-        self.logger.addHandler(fh)
-
         for i in range(1,5):
             if i < 4:
                 self.logger.info("正在第{}次模拟登陆健康上报系统".format(i))
