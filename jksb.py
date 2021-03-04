@@ -213,7 +213,7 @@ if __name__ == '__main__':
     logger.info("\t" + "*"*20 + "程序运行开始" + "*"*20)
     users = readJson(configPath)
     for count in range(len(users)):
-        logging.info("\t开始为用户{}：{}执行健康上报".format(count+1,users[count]['username']))
+        logger.info("\t开始为用户{}：{}执行健康上报".format(count+1,users[count]['username']))
         user = ZZUjksb(users[count],logger)
         user.main()
     logger.info("\t" + "*"*20 + "程序运行结束" + "*"*20)
