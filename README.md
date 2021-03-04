@@ -50,7 +50,8 @@
    | memo22   | 地理位置获取                                                 | 默认 |
    | jingdu   | 精度                                                         | 默认 |
    | weidu    | 纬度                                                         | 默认 |
-   | sckey    | server酱key                                                  | 选填 |
+   | sckey    | Server酱 Key                                                 | 选填 |
+   | sctkey   | Server酱Turbo SendKey                                        | 选填 |
    | ddtoken  | 钉钉机器人token                                              | 选填 |
    
 5. 运行代码测试
@@ -81,9 +82,13 @@
 
    在线校验json格式：[https://www.bejson.com/](https://www.bejson.com/)
 
-3. server酱申请地址：[http://sc.ftqq.com/](http://sc.ftqq.com/)
+3. Server酱申请地址：[http://sc.ftqq.com/](http://sc.ftqq.com/)
 
-4. 钉钉通知机器人自定义机器人文档：[https://developers.dingtalk.com/document/app/custom-robot-access](https://developers.dingtalk.com/document/app/custom-robot-access)，机器人关键词填写`健康上报`
+   **Server酱旧版将于四月下线，请更换Server酱Turbo使用**
+
+4. Server酱Turbo申请地址：[https://sct.ftqq.com/](https://sct.ftqq.com/)
+
+5. 钉钉通知机器人自定义机器人文档：[https://developers.dingtalk.com/document/app/custom-robot-access](https://developers.dingtalk.com/document/app/custom-robot-access)，机器人关键词填写`健康上报`
 
 ## 更新日志
 
@@ -94,6 +99,10 @@
 2. 2021.3.3
 
    优化代码逻辑，修复文件路径问题。
+   
+3. 2021.3.3
+
+   添加Server酱Turbo推送渠道
 
 ## TODO
 

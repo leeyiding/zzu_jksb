@@ -39,6 +39,7 @@
         },
         "notify": {
             "sckey": "",
+            "sckey": "",
             "ddtoken": ""
         }
     }

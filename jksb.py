@@ -102,6 +102,26 @@ class ZZUjksb(object):
                     self.logger.error("\tServer酱通发送知信息失败！请检查sckey后重试！")
                 elif r['errmsg'] == "不要重复发送同样的内容":
                     self.logger.error("\tServer酱通发送知信息失败！短时间内不要重复发送同样的内容！")
+                else:
+                    self.logger.error("\tServer酱通发送知信息失败！原因未知")
+        if notify['sctkey']:
+            notifyUrl = "https://sctapi.ftqq.com/{}.send".format(notify['sctkey'])
+            data = {
+                "text": "健康上报打卡完成",
+                "desp": msg
+            }
+            r = requests.post(url=notifyUrl,data=data)
+            r.encoding = "utf-8"
+            r = json.loads(r.text)
+            if r["code"] == 0 :
+                self.logger.info("\tServer酱Turbo通发送知信息成功！")
+            else:
+                if r["message"] == "[AUTH]用户不存在或者权限不足":
+                    self.logger.error("\tServer酱Turbo通发送知信息失败！请检查sctkey后重试！")
+                elif r["message"] == "[AUTH]超过分钟的发送次数限制[5]，请稍后再试":
+                    self.logger.error("\tServer酱Turbo通发送知信息失败！短时间内不要重复发送同样的内容！")
+                else:
+                    self.logger.error("\tServer酱Turbo通发送知信息失败！原因未知")
         if notify['ddtoken']:
             notifyUrl = "https://oapi.dingtalk.com/robot/send?access_token={}".format(notify['ddtoken'])
             data = {
@@ -143,6 +163,8 @@ class ZZUjksb(object):
             return False
         
     def main(self):
+        # self.login()
+        # self.checkin()
         for i in range(1,4):
             self.logger.info("\t正在第{}次模拟登陆健康上报系统".format(i))
             # 判断登录状态
