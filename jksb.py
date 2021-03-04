@@ -87,20 +87,23 @@ class ZZUjksb(object):
     # 发送消息通知
     def sendMsg(self,notify,msg):
         if notify['sckey']:
-            serverUrl = "https://sc.ftqq.com/{}.send".format(notify['sckey'])
+            notifyUrl = "https://sc.ftqq.com/{}.send".format(notify['sckey'])
             data = {
                 "text": "健康上报打卡完成",
                 "desp": msg
             }
-            r = requests.post(url=serverUrl,data=data)
+            r = requests.post(url=notifyUrl,data=data)
             r.encoding = "utf-8"
             r = json.loads(r.text)
             if r['errno'] == 0 :
                 self.logger.info("\tServer酱通发送知信息成功！")
             else:
-                self.logger.error("\tServer酱通发送知信息失败！")
+                if r['errmsg'] == "bad pushtoken":
+                    self.logger.error("\tServer酱通发送知信息失败！请检查sckey后重试！")
+                elif r['errmsg'] == "不要重复发送同样的内容":
+                    self.logger.error("\tServer酱通发送知信息失败！短时间内不要重复发送同样的内容！")
         if notify['ddtoken']:
-            webhook = "https://oapi.dingtalk.com/robot/send?access_token={}".format(notify['ddtoken'])
+            notifyUrl = "https://oapi.dingtalk.com/robot/send?access_token={}".format(notify['ddtoken'])
             data = {
                 "msgtype": "markdown",
                 "markdown": {
@@ -108,7 +111,7 @@ class ZZUjksb(object):
                     "text": msg
                 }
             }
-            r = requests.post(url=webhook,json=data)
+            r = requests.post(url=notifyUrl,json=data)
             r.encoding = "utf-8"
             r = json.loads(r.text)
             if r['errcode'] == 0:
