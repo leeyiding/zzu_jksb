@@ -212,8 +212,8 @@ class ZZUjksb(object):
                     # 判断签到状态
                     if self.checkin():
                         break
-        if i == 3:
-            self.logger.error("已连续尝试模拟登陆三次失败，请检查网络或报错信息后重试！")
+            if i == 3:
+                self.logger.error("已连续尝试模拟登陆三次失败，请检查网络或报错信息后重试！")
 
 def readJson(configPath):
     if os.path.exists(configPath):
