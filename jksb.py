@@ -233,23 +233,23 @@ class ZZUjksb(object):
                         return False
         
     def main(self):
-        self.login()
+        # self.login()
         self.getUsername()
-        self.checkin()
-        # for i in range(1,4):
-        #     self.logger.info("正在第{}次模拟登陆健康上报系统".format(i))
-        #     # 判断登录状态
-        #     if self.login():
-        #         # 判断打卡状态
-        #         if self.checkStatus():
-        #             self.logger.info("无需重复打卡，程序执行完成！")
-        #             break
-        #         else:
-        #             # 判断签到状态
-        #             if self.checkin():
-        #                 break
-        #     if i == 3:
-        #         self.logger.error("已连续尝试模拟登陆三次失败，请检查网络或报错信息后重试！")
+        # self.checkin()
+        for i in range(1,4):
+            self.logger.info("正在第{}次模拟登陆健康上报系统".format(i))
+            # 判断登录状态
+            if self.login():
+                # 判断打卡状态
+                if self.checkStatus():
+                    self.logger.info("无需重复打卡，程序执行完成！")
+                    break
+                else:
+                    # 判断签到状态
+                    if self.checkin():
+                        break
+            if i == 3:
+                self.logger.error("已连续尝试模拟登陆三次失败，请检查网络或报错信息后重试！")
 
 def readJson(configPath):
     if os.path.exists(configPath):
