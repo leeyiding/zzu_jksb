@@ -86,11 +86,11 @@ class ZZUjksb(object):
                 return False
      
     # 发送消息通知
-    def sendMsg(self,notify,msg):
-        if notify['sckey']:
-            notifyUrl = "https://sc.ftqq.com/{}.send".format(notify['sckey'])
+    def sendMsg(self,title,msg):
+        if self.notify['sckey']:
+            notifyUrl = "https://sc.ftqq.com/{}.send".format(self.notify['sckey'])
             data = {
-                "text": "健康上报打卡完成",
+                "text": title,
                 "desp": msg
             }
             try:
@@ -110,10 +110,10 @@ class ZZUjksb(object):
                         self.logger.error("Server酱发送通知信息失败！短时间内不要重复发送同样的内容！")
                     else:
                         self.logger.error("Server酱发送通知信息失败！原因未知")
-        if notify['sctkey']:
-            notifyUrl = "https://sctapi.ftqq.com/{}.send".format(notify['sctkey'])
+        if self.notify['sctkey']:
+            notifyUrl = "https://sctapi.ftqq.com/{}.send".format(self.notify['sctkey'])
             data = {
-                "text": "健康上报打卡完成",
+                "text": title,
                 "desp": msg
             }
             try:
@@ -133,12 +133,12 @@ class ZZUjksb(object):
                         self.logger.error("Server酱Turbo发送通知信息失败！短时间内不要重复发送同样的内容！")
                     else:
                         self.logger.error("Server酱Turbo发送通知信息失败！原因未知")
-        if notify['ddtoken']:
-            notifyUrl = "https://oapi.dingtalk.com/robot/send?access_token={}".format(notify['ddtoken'])
+        if self.notify['ddtoken']:
+            notifyUrl = "https://oapi.dingtalk.com/robot/send?access_token={}".format(self.notify['ddtoken'])
             data = {
                 "msgtype": "markdown",
                 "markdown": {
-                    "title": "健康上报打卡完成",
+                    "title": title,
                     "text": msg
                 }
             }
@@ -182,13 +182,20 @@ class ZZUjksb(object):
             else:
                 r.encoding = "utf-8"
                 bs = BeautifulSoup(r.text,"html.parser")
-                msg = bs.find('div',style="width:296px;height:100%;font-size:14px;color:#333;line-height:26px;float:left;")
-                if msg:
-                    self.logger.info(msg.text.replace("　",""))
-                    self.sendMsg(self.notify,msg.text)
+                errmsg = re.findall('提交失败',r.text)
+                if errmsg:
+                    msg = bs.find('div',style="width:296px;height:100%;font-size:12px;color:#333;line-height:20px;float:left;")
+                    self.logger.error(msg.text)
+                    self.sendMsg("健康上报打卡失败",msg.text)
                     return True
                 else:
-                    return False
+                    msg = bs.find('div',style="width:296px;height:100%;font-size:14px;color:#333;line-height:26px;float:left;")
+                    if msg:
+                        self.logger.info(msg.text.replace("　",""))
+                        self.sendMsg("健康上报打卡完成",msg.text)
+                        return True
+                    else:
+                        return False
         
     def main(self):
         # self.login()
@@ -230,10 +237,11 @@ if __name__ == '__main__':
     logger = logging.getLogger(__name__)
     # 日志输入文件
     date = time.strftime("%Y-%m-%d", time.localtime()) 
+    logPath = '{}/{}.log'.format(logDir,date)
     if not os.path.exists(logDir):
         logger.warning("未检测到日志目录存在，开始创建logs目录")
         os.mkdir(logDir)
-    fh = logging.FileHandler('{}/{}.log'.format(logDir,date), mode='a', encoding='utf-8')
+    fh = logging.FileHandler(logPath, mode='a', encoding='utf-8')
     fh.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))
     logger.addHandler(fh)
 
@@ -245,4 +253,6 @@ if __name__ == '__main__':
         user = ZZUjksb(users[count],logger)
         user.main()
     logger.info("*"*10 + "程序运行结束" + "*"*10)
+    with open(logPath,'a') as f:
+        f.write("\n\n")
         
