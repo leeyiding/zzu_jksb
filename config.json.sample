@@ -1,46 +1,49 @@
-[
-    {
-        "username": "",
-        "password": "",
-        "data1": {
-            "day6": "b",
-            "did": "1",
-            "door": "",
-            "men6": "a"
-        },
-        "data2": {
-            "myvs_1": "否",
-            "myvs_2": "否",
-            "myvs_3": "否",
-            "myvs_4": "否",
-            "myvs_5": "否",
-            "myvs_6": "否",
-            "myvs_7": "否",
-            "myvs_8": "否",
-            "myvs_9": "否",
-            "myvs_10": "否",
-            "myvs_11": "否",
-            "myvs_12": "否",
-            "myvs_13a": "41",
-            "myvs_13b": "4101",
-            "myvs_13c": "高新区科学大道100号郑州大学新校区",
-            "myvs_14": "否",
-            "myvs_14b": "",
-            "memo22": "不支持地理定位",
-            "did": "2",
-            "door": "",
-            "day6": "b",
-            "men6": "a",
-            "sheng6": "",
-            "shi6": "",
-            "fun3": "",
-            "jingdu": "0.000000",
-            "weidu": "0.000000"
-        },
-        "notify": {
-            "sckey": "",
-            "sckey": "",
-            "ddtoken": ""
+{
+    "cleanLogDay": 7,
+    "users": [
+        {
+            "username": "",
+            "password": "",
+            "data1": {
+                "day6": "b",
+                "did": "1",
+                "door": "",
+                "men6": "a"
+            },
+            "data2": {
+                "myvs_1": "否",
+                "myvs_2": "否",
+                "myvs_3": "否",
+                "myvs_4": "否",
+                "myvs_5": "否",
+                "myvs_6": "否",
+                "myvs_7": "否",
+                "myvs_8": "否",
+                "myvs_9": "否",
+                "myvs_10": "否",
+                "myvs_11": "否",
+                "myvs_12": "否",
+                "myvs_13a": "41",
+                "myvs_13b": "4101",
+                "myvs_13c": "高新区科学大道100号郑州大学新校区",
+                "myvs_14": "否",
+                "myvs_14b": "",
+                "memo22": "不支持地理定位",
+                "did": "2",
+                "door": "",
+                "day6": "b",
+                "men6": "a",
+                "sheng6": "",
+                "shi6": "",
+                "fun3": "",
+                "jingdu": "0.000000",
+                "weidu": "0.000000"
+            },
+            "notify": {
+                "sckey": "",
+                "sctkey": "",
+                "ddtoken": ""
+            }
         }
-    }
-]
+    ]
+}

@@ -77,7 +77,7 @@ class ZZUjksb(object):
             self.logger.error("检查打卡状态失败")
         else:
             r.encoding = "utf-8"
-            result = re.findall(r"\u4eca\u65e5\u60a8\u5df2\u7ecf\u586b\u62a5\u8fc7\u4e86",r.text)
+            result = re.findall(r"今日您已经填报过了",r.text)
             if result:
                 self.logger.info(result[0])
                 return True
@@ -219,12 +219,27 @@ def readJson(configPath):
     if os.path.exists(configPath):
         #读取用户配置信息
         with open(configPath,encoding='UTF-8') as fp:
-            users = json.load(fp)
-            return users
+            config = json.load(fp)
+            return config
     else:
         logger.error("未检测到配置文件config.json存在，请按照README.md说明创建配置文件")
         logger.info("*"*10 + "程序运行结束" + "*"*10)
         sys.exit(0)
+
+def cleanLog(logDir,day):
+    logger.info("开始清理日志")
+    cleanNum = 0
+    files = os.listdir(logDir)
+    for file in files:
+        today = time.mktime(time.strptime(time.strftime("%Y-%m-%d", time.localtime()),"%Y-%m-%d"))
+        logDate = time.mktime(time.strptime(file.split(".")[0],"%Y-%m-%d"))
+        dayNum = int((int(today) - int(logDate)) / (24 * 60 * 60))
+        if dayNum > day:
+            os.remove("{}/{}".format(logDir,file))
+            cleanNum += 1
+            logger.info("已删除{}天前日志{}".format(dayNum,file))
+    if cleanNum == 0:
+        logger.info("未检测到过期日志，无需清理！")
 
 if __name__ == '__main__':
     # 定义环境变量
@@ -247,11 +262,13 @@ if __name__ == '__main__':
 
     # 运行主程序
     logger.info("*"*10 + "程序运行开始" + "*"*10)
-    users = readJson(configPath)
+    config = readJson(configPath)
+    users = config['users']
     for count in range(len(users)):
         logger.info("开始为用户{}：{}执行健康上报".format(count+1,users[count]['username']))
         user = ZZUjksb(users[count],logger)
         user.main()
+    cleanLog(logDir,config['cleanLogDay'])
     logger.info("*"*10 + "程序运行结束" + "*"*10)
     with open(logPath,'a') as f:
         f.write("\n\n")
