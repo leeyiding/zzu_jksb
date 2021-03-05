@@ -76,19 +76,25 @@
 
 ## 注意事项
 
-1. 网站会检测运行脚本设备IP，并识别IP归属地，管理员后台可以看到，所以不建议使用云服务器、云函数、GitHub Action等运行该程序，建议使用家中路由器、NAS、树莓派等设备运行脚本
+1. 所在地省市执行`pyhon3 getCode.py`查询
 
-2. 多用户在`[]`中添加更多信息即可，注意严格遵守json语法
+2. 若想提交上报时的地理位置，请将配置文件中`memo22`值改为”成功获取“，`jingdu`和`weidu`值分别填入经纬度。拾取坐标系统：[http://api.map.baidu.com/lbsapi/getpoint/index.html](http://api.map.baidu.com/lbsapi/getpoint/index.html)
+
+3. 网站会检测运行脚本设备IP，并识别IP归属地，管理员后台可以看到，所以不建议使用云服务器、云函数、GitHub Action等运行该程序，建议使用家中路由器、NAS、树莓派等设备运行脚本
+
+4. 多用户在`[]`中添加更多信息即可，注意严格遵守json语法
 
    在线校验json格式：[https://www.bejson.com/](https://www.bejson.com/)
 
-3. Server酱申请地址：[http://sc.ftqq.com/](http://sc.ftqq.com/)
+## 消息通知
+
+1. Server酱申请地址：[http://sc.ftqq.com/](http://sc.ftqq.com/)
 
    **Server酱旧版将于四月下线，请更换Server酱Turbo使用**
 
-4. Server酱Turbo申请地址：[https://sct.ftqq.com/](https://sct.ftqq.com/)
+2. Server酱Turbo申请地址：[https://sct.ftqq.com/](https://sct.ftqq.com/)
 
-5. 钉钉通知机器人自定义机器人文档：[https://developers.dingtalk.com/document/app/custom-robot-access](https://developers.dingtalk.com/document/app/custom-robot-access)，机器人关键词填写`健康上报`
+3. 钉钉通知机器人自定义机器人文档：[https://developers.dingtalk.com/document/app/custom-robot-access](https://developers.dingtalk.com/document/app/custom-robot-access)，机器人关键词填写`健康上报`
 
 ## 更新日志
 
@@ -103,6 +109,10 @@
 3. 2021.3.3
 
    添加Server酱Turbo推送渠道
+   
+4. 2021.3.5
+
+   添加省市代码查询功能
 
 ## TODO
 
