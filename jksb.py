@@ -234,12 +234,12 @@ class ZZUjksb(object):
         
     def main(self):
         # self.login()
-        self.getUsername()
         # self.checkin()
         for i in range(1,4):
             self.logger.info("正在第{}次模拟登陆健康上报系统".format(i))
             # 判断登录状态
             if self.login():
+                self.getUsername()
                 # 判断打卡状态
                 if self.checkStatus():
                     self.logger.info("无需重复打卡，程序执行完成！")
