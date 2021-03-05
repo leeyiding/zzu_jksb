@@ -1,5 +1,12 @@
 {
     "cleanLogDay": 7,
+    "email": {
+        "host": "",
+        "port": 465,
+        "user": "",
+        "password": "",
+        "sender": ""
+    },
     "users": [
         {
             "username": "",

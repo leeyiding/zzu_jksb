@@ -11,16 +11,20 @@ import re
 import logging
 import json
 from bs4 import BeautifulSoup
+import smtplib
+from email.mime.text import MIMEText
+from email.header import Header
 
 class ZZUjksb(object):
     # 初始化
-    def __init__(self,user,logger):
-        self.username = user['username']
-        self.password = user['password']
+    def __init__(self,user,email,logger):
+        self.uid = user['uid']
+        self.upw = user['upw']
         self.data1 = user['data1']
         self.data2 = user['data2']
         self.notify = user['notify']
         self.baseUrl = "https://jksb.v.zzu.edu.cn/vls6sss/zzujksb.dll"
+        self.email = email
         self.logger = logger
     # 登陆
     def login(self):
@@ -32,8 +36,8 @@ class ZZUjksb(object):
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36"
         }
         data = {
-            "uid": self.username,
-            "upw": self.password,
+            "uid": self.uid,
+            "upw": self.upw,
             "smbtn": "进入健康状况上报平台",
             "hh28": "540"
         }
@@ -59,7 +63,23 @@ class ZZUjksb(object):
                 self.data2["ptopid"] = self.ptopid
                 self.data2['sid'] = self.sid
                 return True
-
+    def getUsername(self):
+        infoUrl = "{}/viewdata?ptopid={}&fun2=h&mt2=&ws2=&us2=b&dw5=&nj5=&ids={}&sid={}".format(self.baseUrl,self.ptopid,self.uid,self.sid)
+        headers = {
+            "Host": "jksb.v.zzu.edu.cn",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36"
+        }
+        try:
+            r = requests.get(url=infoUrl,headers=headers,timeout=300)
+        except Exception as e:
+            self.logger.error(e)
+            self.logger.error("获取用户名失败，请检查网络后重试")
+            self.username = self.uid
+        else:
+            r.encoding = "utf-8"
+            bs = BeautifulSoup(r.text,"html.parser")
+            self.username = bs.find_all("span",style="color:#00c")[1].text
+            
     # 检查打卡状态
     def checkStatus(self):
         checkUrl = self.baseUrl + "/jksb"
@@ -87,6 +107,21 @@ class ZZUjksb(object):
      
     # 发送消息通知
     def sendMsg(self,title,msg):
+        if self.email["host"] and self.email["port"] and self.email["user"] and self.email["password"] and self.email["sender"] and self.notify['email']:
+            content = msg
+            message = MIMEText(content, 'plain', 'utf-8')
+            message['From'] = Header("admin", 'utf-8')  
+            message['To'] =  Header(self.username, 'utf-8')
+            subject = title
+            message['Subject'] = Header(subject, 'utf-8') 
+            try:
+                smtpObj = smtplib.SMTP_SSL(self.email["host"], self.email["port"]) 
+                smtpObj.login(self.email["user"],self.email["password"])  
+                smtpObj.sendmail(self.email["sender"], self.notify['email'], message.as_string())
+                smtpObj.quit()
+                self.logger.info('邮件发送成功')
+            except smtplib.SMTPException as e:
+                self.logger.error('邮件发送失败')
         if self.notify['sckey']:
             notifyUrl = "https://sc.ftqq.com/{}.send".format(self.notify['sckey'])
             data = {
@@ -198,22 +233,23 @@ class ZZUjksb(object):
                         return False
         
     def main(self):
-        # self.login()
-        # self.checkin()
-        for i in range(1,4):
-            self.logger.info("正在第{}次模拟登陆健康上报系统".format(i))
-            # 判断登录状态
-            if self.login():
-                # 判断打卡状态
-                if self.checkStatus():
-                    self.logger.info("无需重复打卡，程序执行完成！")
-                    break
-                else:
-                    # 判断签到状态
-                    if self.checkin():
-                        break
-            if i == 3:
-                self.logger.error("已连续尝试模拟登陆三次失败，请检查网络或报错信息后重试！")
+        self.login()
+        self.getUsername()
+        self.checkin()
+        # for i in range(1,4):
+        #     self.logger.info("正在第{}次模拟登陆健康上报系统".format(i))
+        #     # 判断登录状态
+        #     if self.login():
+        #         # 判断打卡状态
+        #         if self.checkStatus():
+        #             self.logger.info("无需重复打卡，程序执行完成！")
+        #             break
+        #         else:
+        #             # 判断签到状态
+        #             if self.checkin():
+        #                 break
+        #     if i == 3:
+        #         self.logger.error("已连续尝试模拟登陆三次失败，请检查网络或报错信息后重试！")
 
 def readJson(configPath):
     if os.path.exists(configPath):
@@ -265,8 +301,8 @@ if __name__ == '__main__':
     config = readJson(configPath)
     users = config['users']
     for count in range(len(users)):
-        logger.info("开始为用户{}：{}执行健康上报".format(count+1,users[count]['username']))
-        user = ZZUjksb(users[count],logger)
+        logger.info("开始为用户{}：{}执行健康上报".format(count+1,users[count]['uid']))
+        user = ZZUjksb(users[count],config['email'],logger)
         user.main()
     cleanLog(logDir,config['cleanLogDay'])
     logger.info("*"*10 + "程序运行结束" + "*"*10)
