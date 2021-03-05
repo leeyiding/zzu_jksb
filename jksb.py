@@ -40,8 +40,8 @@ class ZZUjksb(object):
         try:
             r = requests.post(url=loginUrl,data=data,headers=headers,timeout=300)
         except Exception as e:
-            self.logger.error("登陆失败，请检查网络后重试")
             self.logger.error(e)
+            self.logger.error("登陆失败，请检查网络后重试")
             return False
         else:
             r.encoding = "utf-8"
@@ -71,8 +71,9 @@ class ZZUjksb(object):
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36"
         }
         try:
-            r = requests.get(url=checkUrl,params=paramas,headers=headers)
-        except:
+            r = requests.get(url=checkUrl,params=paramas,headers=headers,timeout=300)
+        except Exception as e:
+            self.logger.error(e)
             self.logger.error("检查打卡状态失败")
         else:
             r.encoding = "utf-8"
@@ -92,36 +93,46 @@ class ZZUjksb(object):
                 "text": "健康上报打卡完成",
                 "desp": msg
             }
-            r = requests.post(url=notifyUrl,data=data)
-            r.encoding = "utf-8"
-            r = json.loads(r.text)
-            if r['errno'] == 0 :
-                self.logger.info("Server酱通发送知信息成功！")
+            try:
+                r = requests.post(url=notifyUrl,data=data,timeout=60)
+            except Exception as e:
+                self.logger.error(e)
+                self.logger.error("Server发送酱通知信息失败！请检查网络后重试！")
             else:
-                if r['errmsg'] == "bad pushtoken":
-                    self.logger.error("Server酱通发送知信息失败！请检查sckey后重试！")
-                elif r['errmsg'] == "不要重复发送同样的内容":
-                    self.logger.error("Server酱通发送知信息失败！短时间内不要重复发送同样的内容！")
+                r.encoding = "utf-8"
+                r = json.loads(r.text)
+                if r['errno'] == 0 :
+                    self.logger.info("Server酱发送通知信息成功！")
                 else:
-                    self.logger.error("Server酱通发送知信息失败！原因未知")
+                    if r['errmsg'] == "bad pushtoken":
+                        self.logger.error("Server酱发送通知信息失败！请检查sckey后重试！")
+                    elif r['errmsg'] == "不要重复发送同样的内容":
+                        self.logger.error("Server酱发送通知信息失败！短时间内不要重复发送同样的内容！")
+                    else:
+                        self.logger.error("Server酱发送通知信息失败！原因未知")
         if notify['sctkey']:
             notifyUrl = "https://sctapi.ftqq.com/{}.send".format(notify['sctkey'])
             data = {
                 "text": "健康上报打卡完成",
                 "desp": msg
             }
-            r = requests.post(url=notifyUrl,data=data)
-            r.encoding = "utf-8"
-            r = json.loads(r.text)
-            if r["code"] == 0 :
-                self.logger.info("Server酱Turbo通发送知信息成功！")
+            try:
+                r = requests.post(url=notifyUrl,data=data,timeout=60)
+            except Exception as e:
+                self.logger.error(e)
+                self.logger.error("Server酱Turbo发送通知信息失败！请检查网络后重试！")
             else:
-                if r["message"] == "[AUTH]用户不存在或者权限不足":
-                    self.logger.error("Server酱Turbo通发送知信息失败！请检查sctkey后重试！")
-                elif r["message"] == "[AUTH]超过分钟的发送次数限制[5]，请稍后再试":
-                    self.logger.error("Server酱Turbo通发送知信息失败！短时间内不要重复发送同样的内容！")
+                r.encoding = "utf-8"
+                r = json.loads(r.text)
+                if r["code"] == 0 :
+                    self.logger.info("Server酱Turbo发送通知信息成功！")
                 else:
-                    self.logger.error("Server酱Turbo通发送知信息失败！原因未知")
+                    if r["message"] == "[AUTH]用户不存在或者权限不足":
+                        self.logger.error("Server酱Turbo发送通知信息失败！请检查sctkey后重试！")
+                    elif r["message"] == "[AUTH]超过分钟的发送次数限制[5]，请稍后再试":
+                        self.logger.error("Server酱Turbo发送通知信息失败！短时间内不要重复发送同样的内容！")
+                    else:
+                        self.logger.error("Server酱Turbo发送通知信息失败！原因未知")
         if notify['ddtoken']:
             notifyUrl = "https://oapi.dingtalk.com/robot/send?access_token={}".format(notify['ddtoken'])
             data = {
@@ -131,15 +142,20 @@ class ZZUjksb(object):
                     "text": msg
                 }
             }
-            r = requests.post(url=notifyUrl,json=data)
-            r.encoding = "utf-8"
-            r = json.loads(r.text)
-            if r['errcode'] == 0:
-                self.logger.info("钉钉通发送知信息成功！")
-            elif r['errcode'] == 310000:
-                self.logger.error("钉钉通发送知信息失败!请为钉钉机器人添加关键词'健康上报'")
+            try:
+                r = requests.post(url=notifyUrl,json=data,timeout=60)
+            except Exception as e:
+                self.logger.error(e)
+                self.logger.error("钉钉发送通知信息失败！请检查网络后重试！")
             else:
-                self.logger.error("钉钉通发送知信息失败!")
+                r.encoding = "utf-8"
+                r = json.loads(r.text)
+                if r['errcode'] == 0:
+                    self.logger.info("钉钉发送通知信息成功！")
+                elif r['errcode'] == 310000:
+                    self.logger.error("钉钉发送通知信息失败!请为钉钉机器人添加关键词'健康上报'")
+                else:
+                    self.logger.error("钉钉发送通知信息失败!")
 
     # 签到
     def checkin(self):
@@ -150,17 +166,29 @@ class ZZUjksb(object):
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36"
         }
         session = requests.session()
-        session.post(url=checkinUrl,data=self.data1,headers=headers)
-        r = session.post(url=checkinUrl,data=self.data2,headers=headers)
-        r.encoding = "utf-8"
-        bs = BeautifulSoup(r.text,"html.parser")
-        msg = bs.find('div',style="width:296px;height:100%;font-size:14px;color:#333;line-height:26px;float:left;")
-        if msg:
-            self.logger.info(msg.text.replace("　",""))
-            self.sendMsg(self.notify,msg.text)
-            return True
-        else:
+        try:
+            session.post(url=checkinUrl,data=self.data1,headers=headers,timeout=300)
+        except Exception as e:
+            self.logger.error(e)
+            self.logger.error("打卡失败，请检查网络后重试")
             return False
+        else:
+            try:
+                r = session.post(url=checkinUrl,data=self.data2,headers=headers,timeout=300)
+            except Exception as e:
+                self.logger.error(e)
+                self.logger.error("打卡失败，请检查网络后重试")
+                return False
+            else:
+                r.encoding = "utf-8"
+                bs = BeautifulSoup(r.text,"html.parser")
+                msg = bs.find('div',style="width:296px;height:100%;font-size:14px;color:#333;line-height:26px;float:left;")
+                if msg:
+                    self.logger.info(msg.text.replace("　",""))
+                    self.sendMsg(self.notify,msg.text)
+                    return True
+                else:
+                    return False
         
     def main(self):
         # self.login()

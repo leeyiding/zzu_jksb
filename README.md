@@ -57,13 +57,13 @@
 5. 运行代码测试
 
    ```
-   python3 jksb.py
+   python3 ./jksb.py
    ```
 
 6. 测试无误后添加crontab，为防止运行失败，建议每天运行两次
 
    ```
-   20 0,6 * * * python3 /path/to/zzu_jksb/jksb.py
+   20 0,6 * * * /usr/bin/env python3 /path/to/zzu_jksb/jksb.py
    ```
 
 ## 已知问题
