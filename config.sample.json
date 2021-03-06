@@ -1,16 +1,16 @@
 {
-    "cleanLogDay": 7,
-    "email": {
+    "CleanLogDay": 7,
+    "Email": {
         "host": "",
         "port": 465,
         "user": "",
         "password": "",
         "sender": ""
     },
-    "users": [
+    "Users": [
         {
-            "username": "",
-            "password": "",
+            "uid": "",
+            "upw": "",
             "data1": {
                 "day6": "b",
                 "did": "1",
@@ -32,7 +32,7 @@
                 "myvs_12": "否",
                 "myvs_13a": "41",
                 "myvs_13b": "4101",
-                "myvs_13c": "高新区科学大道100号郑州大学新校区",
+                "myvs_13c": "",
                 "myvs_14": "否",
                 "myvs_14b": "",
                 "memo22": "不支持地理定位",
@@ -47,6 +47,7 @@
                 "weidu": "0.000000"
             },
             "notify": {
+                "email": "",
                 "sckey": "",
                 "sctkey": "",
                 "ddtoken": ""

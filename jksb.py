@@ -299,12 +299,12 @@ if __name__ == '__main__':
     # 运行主程序
     logger.info("*"*10 + "程序运行开始" + "*"*10)
     config = readJson(configPath)
-    users = config['users']
+    users = config['Users']
     for count in range(len(users)):
         logger.info("开始为用户{}：{}执行健康上报".format(count+1,users[count]['uid']))
-        user = ZZUjksb(users[count],config['email'],logger)
+        user = ZZUjksb(users[count],config['Email'],logger)
         user.main()
-    cleanLog(logDir,config['cleanLogDay'])
+    cleanLog(logDir,config['CleanLogDay'])
     logger.info("*"*10 + "程序运行结束" + "*"*10)
     with open(logPath,'a') as f:
         f.write("\n\n")
