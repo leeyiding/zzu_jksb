@@ -63,6 +63,7 @@ class ZZUjksb(object):
                 self.data2["ptopid"] = self.ptopid
                 self.data2['sid'] = self.sid
                 return True
+    # 获取姓名
     def getUsername(self):
         infoUrl = "{}/viewdata?ptopid={}&fun2=h&mt2=&ws2=&us2=b&dw5=&nj5=&ids={}&sid={}".format(self.baseUrl,self.ptopid,self.uid,self.sid)
         headers = {
@@ -97,16 +98,25 @@ class ZZUjksb(object):
             self.logger.error("检查打卡状态失败")
         else:
             r.encoding = "utf-8"
-            result = re.findall(r"今日您已经填报过了",r.text)
-            if result:
-                self.logger.info(result[0])
+            checkinResult = re.findall(r"今日您已经填报过了",r.text)
+            if checkinResult:
+                self.healthCodeMsg = ""
+                self.logger.info(checkinResult[0])
                 return True
             else:
+                healthCodeResult = re.findall("还没有上传",r.text)
+                if healthCodeResult:
+                    self.healthCodeMsg = "请注意：你还没有上传国家政务平台健康码截图。"
+                    self.logger.warning(self.healthCodeMsg)
+                else:
+                    self.healthCodeMsg = "恭喜你，本周已上传过国家政务平台健康码截图。"
+                    self.logger.info(self.healthCodeMsg)
                 self.logger.info("检测到今日未打卡，开始打卡")
                 return False
      
     # 发送消息通知
     def sendMsg(self,title,msg):
+        msg += "\n" + self.healthCodeMsg
         if self.email["host"] and self.email["port"] and self.email["user"] and self.email["password"] and self.email["sender"] and self.notify['email']:
             content = msg
             message = MIMEText(content, 'plain', 'utf-8')
@@ -227,13 +237,15 @@ class ZZUjksb(object):
                     msg = bs.find('div',style="width:296px;height:100%;font-size:14px;color:#333;line-height:26px;float:left;")
                     if msg:
                         self.logger.info(msg.text.replace("　",""))
-                        self.sendMsg("健康上报打卡完成",msg.text)
+                        self.sendMsg("健康上报打卡完成",msg.text.replace("　",""))
                         return True
                     else:
                         return False
         
     def main(self):
         # self.login()
+        # self.getUsername()
+        # self.checkStatus()
         # self.checkin()
         for i in range(1,4):
             self.logger.info("正在第{}次模拟登陆健康上报系统".format(i))
