@@ -26,7 +26,7 @@
    
    参数详情
 
-   ```json
+   ```
    {
        "CleanLogDay": 7,						//自动清理几天前日志
        "Email": {								//配置SMTP邮箱
